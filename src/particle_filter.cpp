@@ -64,10 +64,16 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
     normal_distribution<double> dist_theta(particles.theta, std_pos[2]);
     
     for (int i = 0; i < num_particles; ++i) {
-        particles[i].x = particles[i].x + (velocity/yaw_rate) * (sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
-        particles[i].y = particles[i].y + (velocity/yaw_rate) * (cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
-        particles[i].theta = particles[i].theta + yaw_rate * delta_t;
-        
+        if (yaw_rate == 0.){
+            particles[i].x = particles[i].x + (velocity/yaw_rate) * (sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
+            particles[i].y = particles[i].y + (velocity/yaw_rate) * (cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
+            particles[i].theta = particles[i].theta + yaw_rate * delta_t;
+        }
+        else {
+            particles[i].x = particles[i].x + velocity * delta_t * cos(particles[i].theta);
+            particles[i].y = particles[i].y + velocity * delta_t * sin(particles[i].theta);
+            particles[i].theta = particles[i].theta;
+        }
         particles[i].x += dist_x(gen);
         particles[i].y += dist_y(gen);
         particles[i].theta += dist_theta(gen);
@@ -125,6 +131,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
    *   and the following is a good resource for the actual equation to implement
    *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
    */
+    double sum_weights = 0.0f;
     for (int i = 0; i < num_particles; ++i) {
         for (int j = 0; j < observations.size(); ++j){
             // vehicle coordinates transformation
@@ -144,21 +151,25 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
         dataAssociation(map, observations);
 
         // calculate weight for a particle
-        double gauss_norm = 1 / (2 * M_PI * std_landmark[0] * sigma_landmark[1]);
-        double exponent 0.0f;
+        double gauss_norm = 1 / (2 * M_PI * std_landmark[0] * std_landmark[1]);
         double weight = 1.0f;
         for (int k = 0; k < observations.size(); ++k){
             // calculate exponent
-            exponent = (pow(observations[k] - map_landmarks.x, 2) / (2 * pow(std_landmark[0], 2)))
-            + (pow(observations[k] - map_landmarks.y, 2) / (2 * pow(sigma_landmark[1], 2)));
+            double exponent = (pow(observations[k] - map_landmarks[k].x, 2) / (2 * pow(std_landmark[0], 2)))
+            + (pow(observations[k] - map_landmarks[k].y, 2) / (2 * pow(std_landmark[1], 2)));
 
             // calculate weight using normalization terms and exponent
             weight *= gauss_norm * exp(-exponent);
 
         }
         particles[i].weight = weight;
+        sum_weights += weight;
     }
-
+    
+    // In the end, normalized weight alpha.
+    for (i = 0; i < num_particles; ++i){
+        particles[i] = particles[i].weight / weight;
+    }
 }
 
 void ParticleFilter::resample() {
@@ -170,19 +181,19 @@ void ParticleFilter::resample() {
    */
     std::default_random_engine gen;
     std::uniform_int_distribution<int> dist_idx(0, num_particles);
-    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    
     std::vector<Particle> new_particles;
     vector<double> w;
-    
-    int idx = dist_idx(gen);
     float beta = 0.0f;
     for (i = 0; i < num_particles; ++i){
-        w[i] = particles[i].weight;
+        w.push_back(particles[i].weight);
     }
     double mw = max(w);
+    std::uniform_real_distribution<double> distribution(0.0, 2.0 * mw);
     
+    int idx = dist_idx(gen);
     for (i = 0; i < num_particles; ++i){
-        beta += distribution(gen) * 2.0f * mw;
+        beta += distribution(gen);
         while beta > w[index]:
             beta -= w[index];
             index = (index + 1) % num_particles;
