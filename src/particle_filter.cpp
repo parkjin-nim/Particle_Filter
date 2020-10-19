@@ -64,9 +64,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
     normal_distribution<double> dist_theta(particles.theta, std_pos[2]);
     
     for (int i = 0; i < num_particles; ++i) {
-        particles[i].x = particles.x + (velocity/yaw_rate) * (sin(particles[i].theta + yaw_rate*delta_t) - sin(particles[i].theta));
-        particles[i].y = particles.y + (velocity/yaw_rate) * (cos(particles[i].theta) - cos(particles[i].theta + yaw_rate*delta_t));
-        particles[i].theta = particles[i].theta + yaw_rate*delta_t;
+        particles[i].x = particles[i].x + (velocity/yaw_rate) * (sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
+        particles[i].y = particles[i].y + (velocity/yaw_rate) * (cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
+        particles[i].theta = particles[i].theta + yaw_rate * delta_t;
         
         particles[i].x += dist_x(gen);
         particles[i].y += dist_y(gen);
@@ -126,7 +126,6 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
    *   (look at equation 3.33) http://planning.cs.uiuc.edu/node99.html
    */
     for (int i = 0; i < num_particles; ++i) {
-        
         for (int j = 0; j < observations.size(); ++j){
             // vehicle coordinates transformation
             double x_part, y_part, x_obs, y_obs, theta;
@@ -146,8 +145,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
 
         // calculate weight for a particle
         double gauss_norm = 1 / (2 * M_PI * std_landmark[0] * sigma_landmark[1]);
-        double exponent 0.;
-        double weight = 1.;
+        double exponent 0.0f;
+        double weight = 1.0f;
         for (int k = 0; k < observations.size(); ++k){
             // calculate exponent
             exponent = (pow(observations[k] - map_landmarks.x, 2) / (2 * pow(std_landmark[0], 2)))
@@ -169,7 +168,29 @@ void ParticleFilter::resample() {
    * NOTE: You may find std::discrete_distribution helpful here.
    *   http://en.cppreference.com/w/cpp/numeric/random/discrete_distribution
    */
-
+    std::default_random_engine gen;
+    std::uniform_int_distribution<int> dist_idx(0, num_particles);
+    std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    std::vector<Particle> new_particles;
+    vector<double> w;
+    
+    int idx = dist_idx(gen);
+    float beta = 0.0f;
+    for (i = 0; i < num_particles; ++i){
+        w[i] = particles[i].weight;
+    }
+    double mw = max(w);
+    
+    for (i = 0; i < num_particles; ++i){
+        beta += distribution(gen) * 2.0f * mw;
+        while beta > w[index]:
+            beta -= w[index];
+            index = (index + 1) % num_particles;
+        new_particles.push_back(particles[index])
+    }
+    
+    particles.clear();
+    particles = new_particles;
 }
 
 void ParticleFilter::SetAssociations(Particle& particle, 
