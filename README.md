@@ -21,7 +21,7 @@
 
 In this project, Particle filter was implemented to estimate the localization of moving vehicle. As input, it takes a (noisy) GPS estimate of its initial location, a map of landmark locations, and lots of (noisy) sensor and control data at each time step. Output is a posterior probability distribution of where the vehicle is.
 
-Inside the system, each particle has a guess of vehicle's state(location & heading) with weight(probability). Each particle's guess is a time-varying state and updated by 'move and sense' routine of Bayesian. A set of particles represents the output posterior probability distribution of where the vehicle is. 
+Inside the system, each particle has a guess of vehicle's state(location & heading) with weight(probability). Each particle's guess is a time-varying state and updated by 'move and sense' routine of Bayesian. A set of particles's weights represent the output posterior probability distribution of where the vehicle is. 
 
 ![alt text][image1]
 
@@ -34,7 +34,7 @@ Steps:
 - Update the weights of each particle based on the distance from map landmark to measured landmark positions,
   assuming Gaussian model.
 
-- Resample N particles assigning a higher likeihood of picking particles with a higher weight.
+- Resample N particles assigning a higher likeihood of being a choice for a particle with a higher weight.
 
 - Repeat the process.
 
@@ -44,7 +44,7 @@ Steps:
 ## Implementing Particle Filter
 
 My project includes the following files:
-* src/main.cpp uses for uWebSocketIO in communicating with the simulator.
+* src/main.cpp is mainly for communicating with the simulator using uWebSocketIO
 * src/particle_filter.cpp, src/particle_filter.h contains localization process & measurement mgmt.
 * src/map.h contains map data format
 * src/helper_functions.h contains control/landmark data format and distance calculation routine, etc.,
