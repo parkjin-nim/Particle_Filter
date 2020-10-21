@@ -41,7 +41,7 @@ Steps:
 
 ---
 
-## Implementing particle filter
+## Implementing Particle Filter
 
 My project includes the following files:
 * src/main.cpp uses for uWebSocketIO in communicating with the simulator.
@@ -49,7 +49,9 @@ My project includes the following files:
 * src/map.h contains map data format
 * src/helper_functions.h contains control/landmark data format and distance calculation routine, etc.,
 
+/data directory has the input file to the particle filter. map_data.txt includes the position of landmarks (in meters) on an arbitrary Cartesian coordinate system. Each row has three columns, [x position, y position, landmark id]
 
+Particle filter algorithm:
 ![alt text][image6]
 
 
@@ -113,6 +115,10 @@ To run the code,
       * Mac: same deal as make - [install Xcode command line tools](https://developer.apple.com/xcode/features/)
       * Windows: recommend using [MinGW](http://www.mingw.org/)
 - install Udacity simulator which can be downloaded [here](https://github.com/udacity/self-driving-car-sim/releases)
+    * input to simulator
+    * output from simulator
+    * intput 
+
 
 Tips for setting up your environment can be found [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 
