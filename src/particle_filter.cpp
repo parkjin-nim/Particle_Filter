@@ -162,8 +162,8 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
         //by filling w_observations.id as matching landmark.id
         dataAssociation(landmarks_in_range, w_observations);
         
-        //For each particle, observations and map landmarks are paired.
-        //it's probability is a joint prob., a product of each dimension Gaussian prob.
+        //For each particle, it's observations and corresponding map landmarks are paired.
+        //the particles's weight is a joint prob., a product of each dimension's Gaussian prob.
         double sig_x = std_landmark[0];
         double sig_y = std_landmark[1];
         double gauss_norm = 1 / (2 * M_PI * sig_x * sig_y);
@@ -209,9 +209,9 @@ void ParticleFilter::resample() {
     
     std::discrete_distribution<int> sample(weights.begin(), weights.end());
     
-    //particles' number in invariant
+    //the number of particles is invariant,
     //whereas particles' diversity getting sparse
-    //by resampling on weights
+    //by resampling on weights.
     vector<Particle> new_particles;
     for (int i = 0; i < num_particles; ++i)
     {
