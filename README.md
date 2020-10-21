@@ -1,11 +1,29 @@
 # **Particle Filter Project**
 
+
+[//]: # (Image References)
+
+[image1]: ./pictures/PF_architecture.png "function blocks"
+
+[image2]: ./pictures/Bicycle.png "motion model"
+
+[image3]: ./pictures/Transform.png "Coord_Transformation"
+
+[image4]: ./pictures/Gaussian.png "Multivariate Gaussian model"
+
+[image5]: ./pictures/Results.png "Simulation results"
+
+[image6]: ./pictures/PF_algorithm.png "Algorithm"
+
 ---
 
 ## Overview
+
 In this project, Particle filter was implemented to estimate the localization of moving vehicle. As input, it takes a (noisy) GPS estimate of its initial location, a map of landmark locations, and lots of (noisy) sensor and control data at each time step. Output is a posterior probability distribution of where the vehicle is.
 
 Inside the system, each particle has a guess of vehicle's state(location & heading) with weight(probability). Each particle's guess is a time-varying state and updated by 'move and sense' routine of Bayesian. A set of particles represents the output posterior probability distribution of where the vehicle is. 
+
+![alt text][image1]
 
 Steps:
 
@@ -21,19 +39,7 @@ Steps:
 - Repeat the process.
 
 
-[//]: # (Image References)
-
-[image1]: ./pictures/PF_architecture.png "function blocks"
-
-[image2]: ./pictures/Bicycle.png "motion model"
-
-[image3]: ./pictures/Transform.png "Coord_Transformation"
-
-[image4]: ./pictures/Gaussian.png "Multivariate Gaussian model"
-
-[image5]: ./pictures/Results.png "Simulation results"
-
---
+---
 
 ## Implementing particle filter
 
@@ -44,7 +50,7 @@ My project includes the following files:
 * src/helper_functions.h contains control/landmark data format and distance calculation routine, etc.,
 
 
-![alt text][image1]
+![alt text][image6]
 
 
 ### Initialization
