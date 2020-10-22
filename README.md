@@ -19,7 +19,7 @@
 
 ## Overview
 
-In this project, Particle filter was implemented to estimate the localization of moving vehicle. As input, it takes a (noisy) GPS estimate of its initial location, a map of landmark locations, and lots of (noisy) sensor and control data at each time step. Output is a posterior probability distribution of where the vehicle is.
+In this project, Particle filter was implemented to estimate the location of moving vehicle. As input, it takes a (noisy) GPS estimate of its initial location, a map of landmark locations, and lots of (noisy) sensor and control data at each time step. Output is a posterior probability distribution of where the vehicle is.
 
 Inside the system, each particle has a guess of vehicle's state(location & heading) with weight(probability). Each particle's guess is a time-varying state and updated by 'move and sense' routine of Bayesian. A set of particles's weights represent the output posterior probability distribution of where the vehicle is. 
 
